@@ -1,0 +1,5 @@
+# SDK en C:\dev\UA-.NETStandard (ver Directory.Build.props). Opciones globales de MSBuild para "dotnet build" en esta carpeta (se propagan a los proyectos del SDK):
+#  - NBGV_GitEngine=Disabled: el SDK versiona con Nerdbank.GitVersioning, que falla en clones "shallow".
+#  - CustomTestTarget=net10.0: compila el SDK solo para net10.0 (por defecto compila net48/net8/net9/net10).
+-p:NBGV_GitEngine=Disabled
+-p:CustomTestTarget=net10.0

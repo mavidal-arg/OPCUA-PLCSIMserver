@@ -1,0 +1,24 @@
+<Project>
+  <!--
+    Propiedades comunes de los proyectos del PLC Sim Server.
+
+    IMPORTANTE: el código fuente vive en Google Drive, pero el SDK y TODA la salida de compilación
+    (bin/obj) van al disco local C:\dev. Compilar sobre la unidad virtual de Google Drive (G:) es
+    extremadamente lento y deja procesos dotnet colgados que bloquean archivos.
+    Ver "LEEME-Compilar-fuera-de-Google-Drive.md" en G:\My Drive\Trabajo.
+
+    El SDK OPC UA de la OPC Foundation se usa desde el código fuente del repositorio de GitHub
+    (https://github.com/OPCFoundation/UA-.NETStandard), clonado en C:\dev\UA-.NETStandard.
+    Para usar otra copia:  dotnet build -p:OpcUaSdkPath=D:\otra\ruta\UA-.NETStandard
+  -->
+  <PropertyGroup>
+    <OpcUaSdkPath Condition="'$(OpcUaSdkPath)' == ''">C:\dev\UA-.NETStandard</OpcUaSdkPath>
+    <!-- bin/ y obj/ de estos proyectos fuera de Drive (artifacts output, .NET 8+). -->
+    <ArtifactsPath>C:\dev\build\PlcSimServer</ArtifactsPath>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Company>ICSH</Company>
+    <Product>PLC Sim Server - Taller OPC UA</Product>
+  </PropertyGroup>
+</Project>

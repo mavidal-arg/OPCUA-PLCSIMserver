@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Configuración OPC UA del PLC Sim Server (Taller OPC UA ICSH).
+  Adaptada de Applications/ConsoleReferenceServer/Quickstarts.ReferenceServer.Config.xml del SDK
+  de la OPC Foundation (UA-.NETStandard).
+-->
+<ApplicationConfiguration
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ua="http://opcfoundation.org/UA/2008/02/Types.xsd"
+  xmlns="http://opcfoundation.org/UA/SDK/Configuration.xsd"
+>
+  <ApplicationName>PLC Sim Server</ApplicationName>
+  <ApplicationUri>urn:localhost:ICSH:PlcSimServer</ApplicationUri>
+  <ProductUri>urn:icsh:lab:plc-sim</ProductUri>
+  <ApplicationType>Server_0</ApplicationType>
+
+  <SecurityConfiguration>
+    <!-- Certificado self-signed; se crea solo en el primer arranque. PKI fuera de Google Drive. -->
+    <ApplicationCertificates>
+      <CertificateIdentifier>
+        <StoreType>Directory</StoreType>
+        <StorePath>%LocalApplicationData%/PlcSimServer/pki/own</StorePath>
+        <SubjectName>CN=PLC Sim Server, O=ICSH, DC=localhost</SubjectName>
+        <CertificateTypeString>RsaSha256</CertificateTypeString>
+      </CertificateIdentifier>
+    </ApplicationCertificates>
+    <TrustedIssuerCertificates>
+      <StoreType>Directory</StoreType>
+      <StorePath>%LocalApplicationData%/PlcSimServer/pki/issuer</StorePath>
+    </TrustedIssuerCertificates>
+    <TrustedPeerCertificates>
+      <StoreType>Directory</StoreType>
+      <StorePath>%LocalApplicationData%/PlcSimServer/pki/trusted</StorePath>
+    </TrustedPeerCertificates>
+    <RejectedCertificateStore>
+      <StoreType>Directory</StoreType>
+      <StorePath>%LocalApplicationData%/PlcSimServer/pki/rejected</StorePath>
+    </RejectedCertificateStore>
+    <MaxRejectedCertificates>20</MaxRejectedCertificates>
+    <!-- LABORATORIO: acepta cualquier certificado de cliente. En la Etapa 4 poner en false y
+         mover el certificado del cliente desde pki/rejected a pki/trusted. -->
+    <AutoAcceptUntrustedCertificates>true</AutoAcceptUntrustedCertificates>
+    <RejectSHA1SignedCertificates>true</RejectSHA1SignedCertificates>
+    <RejectUnknownRevocationStatus>false</RejectUnknownRevocationStatus>
+    <MinimumCertificateKeySize>2048</MinimumCertificateKeySize>
+    <AddAppCertToTrustedStore>false</AddAppCertToTrustedStore>
+    <SendCertificateChain>true</SendCertificateChain>
+  </SecurityConfiguration>
+
+  <TransportConfigurations></TransportConfigurations>
+
+  <TransportQuotas>
+    <OperationTimeout>120000</OperationTimeout>
+    <MaxStringLength>1048576</MaxStringLength>
+    <MaxByteStringLength>1048576</MaxByteStringLength>
+    <MaxArrayLength>65535</MaxArrayLength>
+    <MaxMessageSize>4194304</MaxMessageSize>
+    <MaxBufferSize>65535</MaxBufferSize>
+    <ChannelLifetime>30000</ChannelLifetime>
+    <SecurityTokenLifetime>3600000</SecurityTokenLifetime>
+  </TransportQuotas>
+
+  <ServerConfiguration>
+    <!-- El servidor escucha en todas las interfaces; "localhost" se reemplaza por el nombre del equipo. -->
+    <BaseAddresses>
+      <ua:String>opc.tcp://localhost:4840/plc-sim</ua:String>
+    </BaseAddresses>
+
+    <SecurityPolicies>
+      <!-- Etapa 1: sin seguridad, para simplificar la primera conexión. -->
+      <ServerSecurityPolicy>
+        <SecurityMode>None_1</SecurityMode>
+        <SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#None</SecurityPolicyUri>
+      </ServerSecurityPolicy>
+      <!-- Etapa 4: firmado y firmado+cifrado ya disponibles, sin cambiar código. -->
+      <ServerSecurityPolicy>
+        <SecurityMode>Sign_2</SecurityMode>
+        <SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256</SecurityPolicyUri>
+      </ServerSecurityPolicy>
+      <ServerSecurityPolicy>
+        <SecurityMode>SignAndEncrypt_3</SecurityMode>
+        <SecurityPolicyUri>http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256</SecurityPolicyUri>
+      </ServerSecurityPolicy>
+    </SecurityPolicies>
+
+    <MinRequestThreadCount>5</MinRequestThreadCount>
+    <MaxRequestThreadCount>100</MaxRequestThreadCount>
+    <MaxQueuedRequestCount>2000</MaxQueuedRequestCount>
+
+    <!-- Anonymous + usuario de laboratorio (lab / lab2026, ver PlcServer.cs y README). -->
+    <UserTokenPolicies>
+      <ua:UserTokenPolicy>
+        <ua:TokenType>Anonymous_0</ua:TokenType>
+      </ua:UserTokenPolicy>
+      <ua:UserTokenPolicy>
+        <ua:TokenType>UserName_1</ua:TokenType>
+      </ua:UserTokenPolicy>
+    </UserTokenPolicies>
+
+    <DiagnosticsEnabled>false</DiagnosticsEnabled>
+    <MaxSessionCount>50</MaxSessionCount>
+    <MaxChannelCount>200</MaxChannelCount>
+    <MinSessionTimeout>10000</MinSessionTimeout>
+    <MaxSessionTimeout>3600000</MaxSessionTimeout>
+    <MaxBrowseContinuationPoints>10</MaxBrowseContinuationPoints>
+    <MaxQueryContinuationPoints>10</MaxQueryContinuationPoints>
+    <MaxHistoryContinuationPoints>100</MaxHistoryContinuationPoints>
+    <MaxRequestAge>600000</MaxRequestAge>
+    <MinPublishingInterval>100</MinPublishingInterval>
+    <MaxPublishingInterval>3600000</MaxPublishingInterval>
+    <PublishingResolution>50</PublishingResolution>
+    <MaxSubscriptionLifetime>3600000</MaxSubscriptionLifetime>
+    <MaxMessageQueueSize>100</MaxMessageQueueSize>
+    <MaxNotificationQueueSize>100</MaxNotificationQueueSize>
+    <MaxNotificationsPerPublish>1000</MaxNotificationsPerPublish>
+    <MinMetadataSamplingInterval>1000</MinMetadataSamplingInterval>
+    <AvailableSamplingRates>
+      <SamplingRateGroup>
+        <Start>100</Start>
+        <Increment>100</Increment>
+        <Count>10</Count>
+      </SamplingRateGroup>
+      <SamplingRateGroup>
+        <Start>1000</Start>
+        <Increment>500</Increment>
+        <Count>20</Count>
+      </SamplingRateGroup>
+    </AvailableSamplingRates>
+    <MaxRegistrationInterval>0</MaxRegistrationInterval>
+    <MinSubscriptionLifetime>10000</MinSubscriptionLifetime>
+    <MaxPublishRequestCount>20</MaxPublishRequestCount>
+    <MaxSubscriptionCount>100</MaxSubscriptionCount>
+    <MaxEventQueueSize>10000</MaxEventQueueSize>
+    <ServerProfileArray>
+      <ua:String>http://opcfoundation.org/UA-Profile/Server/StandardUA2017</ua:String>
+      <ua:String>http://opcfoundation.org/UA-Profile/Server/DataAccess</ua:String>
+    </ServerProfileArray>
+    <ShutdownDelay>2</ShutdownDelay>
+    <ServerCapabilities>
+      <ua:String>DA</ua:String>
+    </ServerCapabilities>
+    <SupportedPrivateKeyFormats>
+      <ua:String>PFX</ua:String>
+      <ua:String>PEM</ua:String>
+    </SupportedPrivateKeyFormats>
+    <MaxTrustListSize>0</MaxTrustListSize>
+    <MultiCastDnsEnabled>false</MultiCastDnsEnabled>
+    <OperationLimits>
+      <MaxNodesPerRead>2500</MaxNodesPerRead>
+      <MaxNodesPerWrite>2500</MaxNodesPerWrite>
+      <MaxNodesPerMethodCall>2500</MaxNodesPerMethodCall>
+      <MaxNodesPerBrowse>2500</MaxNodesPerBrowse>
+      <MaxNodesPerRegisterNodes>2500</MaxNodesPerRegisterNodes>
+      <MaxNodesPerTranslateBrowsePathsToNodeIds>2500</MaxNodesPerTranslateBrowsePathsToNodeIds>
+      <MaxNodesPerNodeManagement>2500</MaxNodesPerNodeManagement>
+      <MaxMonitoredItemsPerCall>2500</MaxMonitoredItemsPerCall>
+    </OperationLimits>
+    <AuditingEnabled>false</AuditingEnabled>
+  </ServerConfiguration>
+
+  <TraceConfiguration>
+    <OutputFilePath>%LocalApplicationData%/PlcSimServer/Logs/PlcSimServer.log.txt</OutputFilePath>
+    <DeleteOnLoad>true</DeleteOnLoad>
+    <TraceMasks>519</TraceMasks>
+  </TraceConfiguration>
+</ApplicationConfiguration>
