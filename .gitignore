@@ -3,3 +3,7 @@ obj/
 .vs/
 *.user
 external/
+node_modules/
+.node-red/
+*.backup
+package-lock.json

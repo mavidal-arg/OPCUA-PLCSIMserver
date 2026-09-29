@@ -144,6 +144,18 @@ dotnet run --project tools/PlcSimServer.TestClient -- --watch 60
 
 También sirve cualquier cliente genérico (p.ej. UaExpert): endpoint de arriba, seguridad None, Anonymous.
 
+## Probar con Node-RED (dashboard local)
+
+`tools/nodered-test/` tiene un flow de **prueba** (no es el de Sung: no tiene MQTT). Lee los 31 tags por
+OPC UA con `node-red-contrib-opcua`, los muestra en un Dashboard 2.0 local y permite escribir los RW. Así se
+ven los rechazos, y el corte y la reconexión del servidor. Instala todo en `C:\dev\nodered-plcsim`:
+
+```bash
+powershell -ExecutionPolicy Bypass -File tools/nodered-test/setup.ps1
+```
+
+Dashboard en <http://localhost:1880/dashboard>. Detalles en `tools/nodered-test/README.md`.
+
 ## Para Sung Hee (Etapa 2)
 
 Lo único que necesitás del servidor es el **endpoint** y el **mapa de NodeIds** de arriba. El flow
@@ -164,4 +176,5 @@ PlcSimServer/
     Opc/OpcHost.cs               ciclo de vida del servidor y certificado
     UI/                          ventana WinForms
   tools/PlcSimServer.TestClient/ cliente de prueba de consola
+  tools/nodered-test/            flow Node-RED de prueba (OPC UA → Dashboard 2.0 local)
 ```
